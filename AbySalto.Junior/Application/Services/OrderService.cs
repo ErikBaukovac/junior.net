@@ -75,6 +75,21 @@ namespace AbySalto.Junior.Application.Services
             return orders;
         }
 
+        public async Task<bool> ChangeOrderStatus(int orderId, int statusId)
+        {
+            var order = await _context.Orders.FindAsync(orderId);
+            if (order is null)
+                return false;
+
+            var statusExists = await _context.OrderStatuses.AnyAsync(s => s.OrderStatusId == statusId);
+            if (!statusExists)
+                return false;
+
+            order.OrderStatusId = statusId;
+            await _context.SaveChangesAsync();
+            return true;
+        }
+
         private int GetCutomerId(string customerName, string phoneNumber)
         {
             var customerID = _context.Customers
@@ -146,6 +161,5 @@ namespace AbySalto.Junior.Application.Services
         {
             return items.Sum(item => item.Quantity * item.Price ) ;
         }
-
     }
 }
