@@ -1,5 +1,6 @@
 ﻿using AbySalto.Junior.Application.DTO;
 using AbySalto.Junior.Application.Interfaces;
+using AbySalto.Junior.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AbySalto.Junior.Controllers
@@ -20,6 +21,17 @@ namespace AbySalto.Junior.Controllers
         {
             var orders = await _service.GetOrders();
             return orders.ToList();
+        }
+
+        [HttpPost("AddOrder")]
+        public async Task<IActionResult> AddOrderAsync([FromBody] OrderModel order)
+        {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var orderID = await _service.AddOrderAsync(order);
+
+            return Ok(orderID);
         }
     }
 }
