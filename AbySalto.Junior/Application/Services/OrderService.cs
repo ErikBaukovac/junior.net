@@ -90,6 +90,38 @@ namespace AbySalto.Junior.Application.Services
             return true;
         }
 
+        public async Task<IEnumerable<OrderModel>> SortOrdersByValue()
+        {
+
+            var orders = await _context.Orders
+                .OrderByDescending(o => o.TotalValue)
+                .Select(o => new OrderModel
+                {
+                    OrderId = o.OrderId,
+                    CustomerName = o.CustomerAddress.Customer.CustomerName,
+                    OrderStatus = o.OrderStatus.StatusName,
+                    CreatedAt = o.CreatedAt,
+                    PaymentType = o.PaymentType.PaymentName,
+                    CustomerStreet = o.CustomerAddress.StreetName,
+                    CustomerCity = o.CustomerAddress.City,
+                    BuildingNo = o.CustomerAddress.BuildingNo,
+                    ApartmentNo = o.CustomerAddress.ApartmentNo,
+                    PostCode = o.CustomerAddress.PostCode,
+                    PhoneNumber = o.CustomerAddress.Customer.PhoneNumber,
+                    Comments = o.Comments,
+                    Items = o.OrderItems.Select(oi => new OrderItemModel
+                    {
+                        ItemName = oi.ItemPrice.Item.ItemName,
+                        Quantity = oi.Quantity,
+                        Price = oi.ItemPrice.Price
+                    }).ToList(),
+                    TotalValue = o.TotalValue,
+                })
+                .ToListAsync();
+
+            return orders;
+        }
+
         private int GetCutomerId(string customerName, string phoneNumber)
         {
             var customerID = _context.Customers
@@ -161,5 +193,6 @@ namespace AbySalto.Junior.Application.Services
         {
             return items.Sum(item => item.Quantity * item.Price ) ;
         }
+        
     }
 }

@@ -45,5 +45,12 @@ namespace AbySalto.Junior.Controllers
                 return Ok();
 
         }
+
+        [HttpGet("SortByValue")]
+        public async Task<List<OrderModel>> SortOrdersByValue()
+        {
+            var orders = await _service.SortOrdersByValue();
+            return orders.ToList();
+        }
     }
 }
