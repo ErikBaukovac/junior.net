@@ -12,7 +12,7 @@ public class ItemPrice
 {
     public int ItemPriceId { get; set; }
     public int ItemId { get; set; }
-    public decimal? Price { get; set; }
+    public decimal Price { get; set; }
     public int CurrencyId { get; set; }
 
     public Item Item { get; set; } = null!;
