@@ -8,5 +8,7 @@ namespace AbySalto.Junior.Application.Interfaces
         Task<IEnumerable<OrderModel>> GetOrders();
 
         Task<int> AddOrderAsync(OrderModel order);
+
+        Task<bool> ChangeOrderStatus(int orderId, int statusId);
     }
 }

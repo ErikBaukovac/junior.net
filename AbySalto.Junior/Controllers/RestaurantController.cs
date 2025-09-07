@@ -33,5 +33,17 @@ namespace AbySalto.Junior.Controllers
 
             return Ok(orderID);
         }
+
+        [HttpGet("ChangeStatus")]
+        public async Task<IActionResult> ChangeOrderStatus(int orderId, int statusId)
+        {
+            var successful = await _service.ChangeOrderStatus(orderId, statusId);
+
+            if(!successful)
+                return BadRequest(ModelState);
+            else
+                return Ok();
+
+        }
     }
 }
