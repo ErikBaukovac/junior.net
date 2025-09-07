@@ -24,11 +24,10 @@ namespace AbySalto.Junior.Application.Services
                     OrderStatus = o.OrderStatus.StatusName,
                     CreatedAt = o.CreatedAt,
                     PaymentType = o.PaymentType.PaymentName,
-                    CustomerStreet = o.CustomerAddress.StreetName,
-                    CustomerCity = o.CustomerAddress.City,
-                    BuildingNo = o.CustomerAddress.BuildingNo,
-                    ApartmentNo = o.CustomerAddress.ApartmentNo,
-                    PostCode = o.CustomerAddress.PostCode,
+                    Address = o.CustomerAddress.StreetName 
+                    + " " + o.CustomerAddress.BuildingNo 
+                    + (string.IsNullOrEmpty(o.CustomerAddress.ApartmentNo) ? "" : "/" + o.CustomerAddress.ApartmentNo) 
+                    + ", " + o.CustomerAddress.PostCode + " " + o.CustomerAddress.City,
                     PhoneNumber = o.CustomerAddress.Customer.PhoneNumber,
                     Comments = o.Comments,
                     Items = o.OrderItems.Select(oi => new OrderItemModel
