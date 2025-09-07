@@ -52,5 +52,12 @@ namespace AbySalto.Junior.Controllers
             var orders = await _service.SortOrdersByValue();
             return orders.ToList();
         }
+
+        [HttpGet("GetTotalValue")]
+        public async Task<decimal> GetTotalOrdersValue(int userId)
+        {
+            var total = await _service.GetTotalOrdersValue(userId);
+            return total;
+        }
     }
 }

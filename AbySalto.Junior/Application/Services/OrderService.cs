@@ -48,29 +48,29 @@ namespace AbySalto.Junior.Application.Services
         {
 
             var orders = await _context.Orders.Select(o => new OrderModel
+            {
+                OrderId = o.OrderId,
+                CustomerName = o.CustomerAddress.Customer.CustomerName,
+                OrderStatus = o.OrderStatus.StatusName,
+                CreatedAt = o.CreatedAt,
+                PaymentType = o.PaymentType.PaymentName,
+                CustomerStreet = o.CustomerAddress.StreetName,
+                CustomerCity = o.CustomerAddress.City,
+                BuildingNo = o.CustomerAddress.BuildingNo,
+                ApartmentNo = o.CustomerAddress.ApartmentNo,
+                PostCode = o.CustomerAddress.PostCode,
+                PhoneNumber = o.CustomerAddress.Customer.PhoneNumber,
+                Comments = o.Comments,
+                Items = o.OrderItems.Select(oi => new OrderItemModel
                 {
-                    OrderId = o.OrderId,
-                    CustomerName = o.CustomerAddress.Customer.CustomerName,
-                    OrderStatus = o.OrderStatus.StatusName,
-                    CreatedAt = o.CreatedAt,
-                    PaymentType = o.PaymentType.PaymentName,
-                    CustomerStreet = o.CustomerAddress.StreetName,
-                    CustomerCity = o.CustomerAddress.City,
-                    BuildingNo = o.CustomerAddress.BuildingNo,
-                    ApartmentNo = o.CustomerAddress.ApartmentNo,
-                    PostCode = o.CustomerAddress.PostCode,
-                    PhoneNumber = o.CustomerAddress.Customer.PhoneNumber,
-                    Comments = o.Comments,
-                    Items = o.OrderItems.Select(oi => new OrderItemModel
-                    {
-                        ItemName = oi.ItemPrice.Item.ItemName,
-                        Quantity = oi.Quantity,
-                        Price = oi.ItemPrice.Price
-                    }).ToList(),
-                    TotalValue = o.TotalValue,
+                    ItemName = oi.ItemPrice.Item.ItemName,
+                    Quantity = oi.Quantity,
+                    Price = oi.ItemPrice.Price
+                }).ToList(),
+                TotalValue = o.TotalValue,
 
 
-                }).ToListAsync();
+            }).ToListAsync();
 
             return orders;
         }
@@ -120,6 +120,15 @@ namespace AbySalto.Junior.Application.Services
                 .ToListAsync();
 
             return orders;
+        }
+
+        public async Task<decimal> GetTotalOrdersValue(int userId)
+        {
+            var orders = await _context.Orders.Where(o => o.CustomerAddress.CustomerId == userId)
+                 .ToListAsync();
+
+            return orders.Sum(o => o.TotalValue ?? 0m);
+
         }
 
         private int GetCutomerId(string customerName, string phoneNumber)
@@ -191,8 +200,8 @@ namespace AbySalto.Junior.Application.Services
 
         private decimal CalculateValue(List<OrderItemModel> items)
         {
-            return items.Sum(item => item.Quantity * item.Price ) ;
+            return items.Sum(item => item.Quantity * item.Price);
         }
-        
+
     }
 }
